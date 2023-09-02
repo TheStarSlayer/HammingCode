@@ -64,7 +64,7 @@ int main()
     // We put 2s in the position of parity bits
     // Now we need to associate the bits to each parity bit    
 
-    int count, sc, skip=0, k;
+    int count = 0, sc, skip=0, k;
 
     for (i = fin_lenbin-1; i >= 0; i--)
     {
