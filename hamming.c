@@ -3,68 +3,107 @@
 #include <string.h>
 #include <math.h>
 
+void hammingset(char*, char*, int*, int, int);
+void parityset(char*, int);
+
 int main()
 {
     char *binstr;
     binstr = (char*) malloc (50*sizeof(char));
 
-    printf("Enter binary number: ");
-    scanf("%s", binstr);
+    if (binstr != NULL)
+    {    
+        printf("Enter binary number: ");
+        scanf("%s", binstr);
 
-    int ini_lenbin = strlen(binstr);
-    int fin_lenbin = ini_lenbin;
+        int i;
 
-    int i, j = 0;
-    for (i = 0; i < fin_lenbin; i++)
-    {
-        if (pow(2,j) == i)
+        int ini_lenbin = strlen(binstr);
+        for (i = 0; i < ini_lenbin; i++)
         {
-            fin_lenbin++;
-            j++;
+            if (binstr[i] != '0' && binstr[i] != '1')
+            {
+                printf("Entered data bits are not binary. Try again..\n");
+                return -1;
+            }
         }
-    }
-    
-    int n_parity = (fin_lenbin - ini_lenbin);
-    int paritybits[n_parity];
+        int fin_lenbin = ini_lenbin;
 
-    // At this point, we have found the final length of hamming code, and the number of parity bits
-    // We have also created an array to store parity bits
-
-    for (i = 0; i < n_parity; i++)
-    {
-        paritybits[i] = pow(2,i) - 1;
-        paritybits[i] = fin_lenbin - paritybits[i] - 1;
-    }
-
-    char *hammingcode = (char*) malloc ((fin_lenbin+1)*sizeof(char));
-    hammingcode[fin_lenbin] = '\0';
-
-    for (j = 0; j < n_parity; j++)
-    {
-        hammingcode[paritybits[j]] = '2';
-    }
-    j = 0;
-
-    for (i = 0; i < ini_lenbin;)
-    {
-        if (hammingcode[j] == '2')
+        int j = 0;
+        for (i = 0; i < fin_lenbin; i++)
         {
-            j++;
+            if (pow(2,j) == i)
+            {
+                fin_lenbin++;
+                j++;
+            }
+        }
+        
+        int n_parity = (fin_lenbin - ini_lenbin);
+        int paritybits[n_parity];
+
+        // At this point, we have found the final length of hamming code, and the number of parity bits
+        // We have also created an array to store parity bits
+
+        for (i = 0; i < n_parity; i++)
+        {
+            paritybits[i] = pow(2,i) - 1;
+            paritybits[i] = fin_lenbin - paritybits[i] - 1;
+        }
+
+        char *hammingcode = (char*) malloc ((fin_lenbin+1)*sizeof(char));
+        if (hammingcode != NULL)
+        {
+            hammingcode[fin_lenbin] = '\0';
+            hammingset(binstr, hammingcode, paritybits, n_parity, ini_lenbin);   
+            parityset(hammingcode, fin_lenbin);    
+
+            printf("\nThe Hamming code of the given binary number is %s", hammingcode);
         }
         else
         {
-            hammingcode[j] = binstr[i];
-            j++;
-            i++;
+            printf("hammingcode not created..please try again\n");
         }
     }
-    
-    // We put 2s in the position of parity bits
-    // Now we need to associate the bits to each parity bit    
+    else
+    {
+        printf("malloc failed. Please try again.\n");
+    }
+    return 0;
+}
 
-    int count = 0, sc, skip=0, k;
+// Hamming code generated successfully!!
+// Now the code requires refactoring!!
 
-    for (i = fin_lenbin-1; i >= 0; i--)
+void hammingset(char og[], char hammingcode[], int parity[], int n_parity, int length)
+{
+    int i,j;
+    for (j = 0; j < n_parity; j++)
+            {
+                hammingcode[parity[j]] = '2';
+            }
+            j = 0;
+
+            for (i = 0; i < length;)
+            {
+                if (hammingcode[j] == '2')
+                {
+                    j++;
+                }
+                else
+                {
+                    hammingcode[j] = og[i];
+                    j++;
+                    i++;
+                }
+            }
+}
+
+void parityset(char hammingcode[], int length)
+{
+    int count = 0, sc = 0, skip=0, k,j,i;
+
+    for (i = length-1; i >= 0; i--)
     {
         if (hammingcode[i] == '2')
         {
@@ -88,7 +127,7 @@ int main()
                     sc = 0;
                 }     
             }
-            
+                    
             if (count%2 == 0)
             {
                 hammingcode[i] = '0';
@@ -101,12 +140,5 @@ int main()
             sc = 0;        
             skip++;
         }
-    }    
-
-    printf("\nThe Hamming code of the given binary number is %s", hammingcode);
-
-    return 0;
+    }
 }
-
-// Hamming code generated successfully!!
-// Now the code requires refactoring!!
