@@ -58,9 +58,7 @@ int main()
             i++;
         }
     }
-
-    // We have successfully generated hamming code --partially, but good job nonetheless
-    // Should have taken lesser time, but it's okay
+    
     // We put 2s in the position of parity bits
     // Now we need to associate the bits to each parity bit    
 
