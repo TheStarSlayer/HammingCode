@@ -73,9 +73,8 @@ int main()
 }
 
 // Hamming code generated successfully!!
-// Now the code requires refactoring!!
 
-void hammingset(char og[], char hammingcode[], int parity[], int n_parity, int length)
+void hammingset(char ogdata[], char hammingcode[], int parity[], int n_parity, int length)
 {
     int i,j;
     for (j = 0; j < n_parity; j++)
@@ -92,7 +91,7 @@ void hammingset(char og[], char hammingcode[], int parity[], int n_parity, int l
                 }
                 else
                 {
-                    hammingcode[j] = og[i];
+                    hammingcode[j] = ogdata[i];
                     j++;
                     i++;
                 }
